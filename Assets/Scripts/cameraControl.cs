@@ -4,18 +4,18 @@ using System.Collections;
 public class cameraControl : MonoBehaviour {
 	
 	public float 	cam_angle 		= 0f;								//the ring around the board that the camera rotates on
-	public float	cam_radius		= 30f;								//the distance from 0,-,0 (board center)-the radius of the camera circle
-	public float	cam_height		= 20f;								//the height above 0,0,0 the camera is situated.
+	public float	cam_radius		= 22f;								//the distance from 0,-,0 (board center)-the radius of the camera circle
+	public float	cam_height		= 30f;								//the height above 0,0,0 the camera is situated.
 	
 	private float 	cam_a_adj		= .5f;								//the amount the camera adjusts the angle on rotation
 	private float	cam_r_adj		= 16f;								//the amount the camera adjusts the radius on zoom  (ideally these should match the angle vector)
 	private float 	cam_h_adj		= 8f;								//the amount the camera adjusts the height on zoom
 
 	
-	public float 	cam_radius_min	= 30f;								//the closest distance to the board
+	public float 	cam_radius_min	= 20f;								//the closest distance to the board
 	public float 	cam_radius_max	= 50f;								//the furthest distance from the board
-	public float 	cam_height_min	= 20f;								//cam height bounds
-	public float 	cam_height_max	= 40f;								//  
+	public float 	cam_height_min	= 30f;								//cam height bounds
+	public float 	cam_height_max	= 50f;								//  
 	
 	public Vector3  look_center		= new Vector3(0f,-4f,0f);			//the vector that the camera locks on
 	
