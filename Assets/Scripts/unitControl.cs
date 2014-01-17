@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class playerController : MonoBehaviour {
+public class unitControl : MonoBehaviour {
 
 	//Moveset is a 2d array containing possible moves from the center for this piece.  1 = Middle Point, 2 = Normal Move locations, 3 = Tzarr Move Locations
 	public int[,] move_grid = new int[7,7] {{0,0,0,0,0,0,0},
@@ -16,13 +16,126 @@ public class playerController : MonoBehaviour {
 							  				
 		
 							  				
-	// Use this for initialization
 	void Start () {
-	
+		SetMovementGrid();
 	}
 	
-	// Update is called once per frame
 	void Update () {
 	
 	}
+	
+	void SetMovementGrid(){
+		switch(name)
+		{
+			case "P1_Soldier":
+				move_grid = new int[7,7]   {{0,0,0,0,0,0,0},
+											{0,0,0,0,0,0,0},
+											{0,0,0,0,0,0,0},
+											{0,0,0,1,0,0,0},
+											{0,0,3,2,3,0,0},
+											{0,0,0,0,0,0,0},
+											{0,0,0,0,0,0,0}};
+			break;
+			case "P1_Lance":
+				move_grid = new int[7,7]   {{0,0,0,0,0,0,0},
+											{0,0,0,0,0,0,0},
+											{0,0,2,3,2,0,0},
+											{0,0,0,1,0,0,0},
+											{0,0,0,2,0,0,0},
+											{0,0,0,2,0,0,0},
+											{0,0,0,3,0,0,0}};
+			break;
+			case "P1_Jester":
+				move_grid = new int[7,7]   {{3,0,0,0,0,0,3},
+											{0,2,0,0,0,2,0},
+											{0,0,0,2,0,0,0},
+											{0,0,3,1,3,0,0},
+											{0,0,0,2,0,0,0},
+											{0,2,0,0,0,2,0},
+											{3,0,0,0,0,0,3}};
+			break;
+			case "P1_Phalanx":
+				move_grid = new int[7,7]   {{0,0,0,0,0,0,0},
+											{0,0,0,0,0,0,0},
+											{0,0,0,2,0,0,0},
+											{0,0,3,1,3,0,0},
+											{0,0,2,2,2,0,0},
+											{0,0,0,0,0,0,0},
+											{0,0,0,0,0,0,0}};
+			break;
+			case "P1_Guard":
+				move_grid = new int[7,7]   {{0,0,0,0,0,0,0},
+											{0,3,0,3,0,3,0},
+											{0,0,2,2,2,0,0},
+											{0,3,2,1,2,3,0},
+											{0,0,0,2,0,0,0},
+											{0,0,0,0,0,0,0},
+											{0,0,0,0,0,0,0}};
+			break;
+			case "P1_Tzarr":
+				move_grid = new int[7,7]   {{0,0,0,0,0,0,0},
+											{0,0,0,0,0,0,0},
+											{0,0,2,2,2,0,0},
+											{0,0,2,1,2,0,0},
+											{0,0,2,2,2,0,0},
+											{0,0,0,0,0,0,0},
+											{0,0,0,0,0,0,0}};
+			break;
+			case "P2_Soldier":
+				move_grid = new int[7,7]   {{0,0,0,0,0,0,0},
+											{0,0,0,0,0,0,0},
+											{0,0,3,2,3,0,0},
+											{0,0,0,1,0,0,0},
+											{0,0,0,0,0,0,0},
+											{0,0,0,0,0,0,0},
+											{0,0,0,0,0,0,0}};
+			break;
+			case "P2_Lance":
+				move_grid = new int[7,7]   {{0,0,0,3,0,0,0},
+											{0,0,0,2,0,0,0},
+											{0,0,0,2,0,0,0},
+											{0,0,0,1,0,0,0},
+											{0,0,2,3,2,0,0},
+											{0,0,0,0,0,0,0},
+											{0,0,0,0,0,0,0}};
+			break;
+			case "P2_Jester":
+				move_grid = new int[7,7]   {{3,0,0,0,0,0,3},
+											{0,2,0,0,0,2,0},
+											{0,0,0,2,0,0,0},
+											{0,0,3,1,3,0,0},
+											{0,0,0,2,0,0,0},
+											{0,2,0,0,0,2,0},
+											{3,0,0,0,0,0,3}};
+			break;
+			case "P2_Phalanx":
+				move_grid = new int[7,7]   {{0,0,0,0,0,0,0},
+											{0,0,0,0,0,0,0},
+											{0,0,2,2,2,0,0},
+											{0,0,3,1,3,0,0},
+											{0,0,0,2,0,0,0},
+											{0,0,0,0,0,0,0},
+											{0,0,0,0,0,0,0}};
+			break;
+			case "P2_Guard":
+				move_grid = new int[7,7]   {{0,0,0,0,0,0,0},
+											{0,0,0,0,0,0,0},
+											{0,0,0,2,0,0,0},
+											{0,3,2,1,2,3,0},
+											{0,0,2,2,2,0,0},
+											{0,3,0,3,0,3,0},
+											{0,0,0,0,0,0,0}};
+			break;
+			case "P2_Tzarr":
+				move_grid = new int[7,7]   {{0,0,0,0,0,0,0},
+											{0,0,0,0,0,0,0},
+											{0,0,2,2,2,0,0},
+											{0,0,2,1,2,0,0},
+											{0,0,2,2,2,0,0},
+											{0,0,0,0,0,0,0},
+											{0,0,0,0,0,0,0}};
+			break;
+		}
+	}
 }
+	
