@@ -38,7 +38,7 @@ public class boardControl : MonoBehaviour {
 			board_sqs[i,j].GetComponent<boardSquare>().square_state = 0;
 			board_sqs[i,j].GetComponent<boardSquare>().game_board = this.gameObject;
 			board_sqs[i,j].GetComponent<boardSquare>().x_loc = i;
-			board_sqs[i,j].GetComponent<boardSquare>().y_loc = j;
+			board_sqs[i,j].GetComponent<boardSquare>().y_loc = j; 
 		}}
 		
 		GameSetup();
@@ -53,7 +53,7 @@ public class boardControl : MonoBehaviour {
 	
 	void GameSetup()
 	{
-		for (int i = 0; i < 9; i ++){
+		for (int i = 0; i < 9; i++){
 		for (int j = 0; j < 9; j++){
 		
 			GameObject temp_obj = null;
@@ -116,6 +116,8 @@ public class boardControl : MonoBehaviour {
 			if (temp_obj != null){
 				temp_obj.GetComponent<unitControl>().x_loc = i;
 				temp_obj.GetComponent<unitControl>().y_loc = j;
+				
+				temp_obj.GetComponent<unitControl>().SetMovementGrid();
 			}
 			
 			//Stores the unit in the board sqs to keep track of what items are where

@@ -9,7 +9,7 @@ public class gameControl : MonoBehaviour {
 	public boardControl 	board_script;
 	public GameObject[,]	bsq_grid 		= new GameObject[9,9];		//locations of board squares for highlighting
 	
-	public int[,]			unit_grid		= new int[9,9];				//0 - cannot move, 1 - center, 2 - normal move, 3 - tzarr move 
+	public int[,]			unit_grid		= new int[9,9];				//0 - empty, 1 - center, 2 - normal move, 3 - tzarr move 
 	public int[,]			board_grid		= new int[9,9];				//0 - open, 1 - P1 Unit, 2 - P2 Unit
 	
 	public GameObject  		clicked_unit;
@@ -43,6 +43,8 @@ public class gameControl : MonoBehaviour {
 			clicked_unit 	= null;
 			grid_x			= -1;
 			grid_y			= -1;
+			
+			ClearUnitGrid();
 		}
 		
 		//if the player left clicks, and there is nothing selected, send out a ray cast to select the first hit unit, or else the first board square hit
@@ -95,6 +97,9 @@ public class gameControl : MonoBehaviour {
 				clicked_unit.GetComponent<unitControl>().selected = true;
 				grid_x = clicked_unit.GetComponent<unitControl>().x_loc;
 				grid_y = clicked_unit.GetComponent<unitControl>().y_loc;
+				
+				Debug.Log (clicked_unit.name);
+				UpdateUnitGrid();
 			}	
 			else if (ray_hit.transform.tag == "BoardSquare"){
 			
@@ -103,16 +108,104 @@ public class gameControl : MonoBehaviour {
 					clicked_unit.GetComponent<unitControl>().selected = true;
 					grid_x = clicked_unit.GetComponent<unitControl>().x_loc;
 					grid_y = clicked_unit.GetComponent<unitControl>().y_loc;
+					
+					UpdateUnitGrid();
 				}
 			}
 		}
+		//Debug.Log (clicked_unit.name);
 		
-		UpdateUnitGrid();
+		
 	}
 	
 	void UpdateUnitGrid(){
+		unitControl unit_scr = clicked_unit.GetComponent<unitControl>();
+		int x_shift = unit_scr.x_loc - 3;
+		int y_shift = unit_scr.y_loc - 3;
 		
+		ClearUnitGrid();
+		
+		for (int i = 0; i < 9; i ++){
+		for (int j = 0; j < 9; j ++){
+			
+			if ((i+x_shift >= 0) && (j+y_shift >= 0) && (i + x_shift < 9) && (j + y_shift < 9) && (j < 7) && (i < 7)){
+				unit_grid[i+x_shift,j+y_shift] = unit_scr.move_grid[i,j];
+			} else unit_grid[i,j] = 0;
+		}}
+		
+		//DebugIntArray(unit_grid);
+		UpdateSquareTex();
 	}
 	
+	void ClearUnitGrid(){
+		for (int i = 0; i < 9; i ++){
+		for (int j = 0; j < 9; j ++){
+			unit_grid[i,j] = 0;
+			bsq_grid[i,j].GetComponent<boardSquare>().square_state = 0;
+		}}
+		
+		UpdateSquareTex();
+		BoardGridSet();
+	}
+	
+	void UpdateSquareTex(){
+		for (int i = 0; i < 9; i ++){
+		for (int j = 0; j < 9; j ++){
+			switch(unit_grid[i,j]){
+				case 0:
+					bsq_grid[i,j].GetComponent<boardSquare>().square_state = 0;
+					break;
+				case 1:
+					if (UnitIsOurs()) {bsq_grid[i,j].GetComponent<boardSquare>().square_state = 3;}
+					else {bsq_grid[i,j].GetComponent<boardSquare>().square_state = 6;}
+					break;
+				case 2:
+					//CHANGE THIS LATER JUST FOR TEST ATM
+					if (UnitIsOurs()) {bsq_grid[i,j].GetComponent<boardSquare>().square_state = 1;}
+					else {bsq_grid[i,j].GetComponent<boardSquare>().square_state = 4;}
+					break;
+				case 3:
+					if (TzarrIsNear())
+					{
+						if (UnitIsOurs()){}
+						else {}
+					} else bsq_grid[i,j].GetComponent<boardSquare>().square_state = 0;
+					break;
+				default:
+					bsq_grid[i,j].GetComponent<boardSquare>().square_state = 0;
+					break;
+			}
+		}}
+	}
+	
+	//Checks if the Unit matches the player turn
+	bool UnitIsOurs(){
+		if (player_turn == 1 && clicked_unit.tag == "WhiteUnit") {return true;}
+		else if (player_turn == 2 && clicked_unit.tag == "BlackUnit") {return true;}
+		else {return false;}
+	}
+	
+	//Checks if the Tzarr is within 1 space of the unit
+	bool TzarrIsNear(){
+		return false;	
+	}
+	
+	
+	
+	
+	//DEBUG Methods
+	void DebugIntArray(int[,] array){
+		for (int i = 0; i < 9; i ++){
+		for (int j = 0; j < 9; j ++){
+			Debug.Log (array[i,j]);
+		}}
+	}
+	
+	void DebugGameObjArray(GameObject[,] array){
+		for (int i = 0; i < 9; i ++){
+		for (int j = 0; j < 9; j ++){
+			Debug.Log (array[i,j].name);	
+		}}
+	}
 	
 }//End of Class

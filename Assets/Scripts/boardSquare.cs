@@ -11,15 +11,9 @@ public class boardSquare : MonoBehaviour {
 	 	*/
 	 	
 	
-	public GameObject 		game_board;						//this is the main game board / drop in inspector to link scripts / set to the board when creating squares
-	public Material			move_tile;
-	public Material			attack_tile;
-	public Material			select_tile;
-	public Material			move_2_tile;
-	public Material			attack_2_tile;
-	public Material 		select_2_tile;
+	public GameObject 		game_board;						//this is the main game board / drop in inspector to link scripts / set to the board when creating squares];
 	
-	public GameObject		linked_unit;
+	public GameObject		linked_unit = null;
 	
 	private boardControl 	board_script;					//this is the script for the game board, set in START
 	public int				square_state	= 0;			//square state:  0 - invisible, not selected,  1 - light up teal for movement,  2 - light up red for attack an enemy unit, 3 - Selected Tile
@@ -33,41 +27,12 @@ public class boardSquare : MonoBehaviour {
 	}
 
 	void Update () {
-		if (square_state == 0)
-		{
+		if (square_state == 0){
 			renderer.enabled = false;
 		}
-		
-		if (square_state == 1)
-		{
+		else{
 			renderer.enabled = true;
-			renderer.material = move_tile;
-		}
-		
-		if (square_state == 2)
-		{
-			renderer.enabled = true;
-			renderer.material = attack_tile;
-		}
-		if (square_state == 3)
-		{
-			renderer.enabled = true;
-			renderer.material = select_tile;
-		}
-		if (square_state == 4)
-		{
-			renderer.enabled = true;
-			renderer.material = move_2_tile;
-		}
-		if (square_state == 5)
-		{
-			renderer.enabled = true;
-			renderer.material = attack_2_tile;
-		}
-		if (square_state == 6)
-		{
-			renderer.enabled = true;
-			renderer.material = select_2_tile;
+			renderer.material = renderer.materials[square_state - 1];
 		}
 	 }//end of Update
 	

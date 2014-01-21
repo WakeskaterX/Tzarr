@@ -20,23 +20,19 @@ public class unitControl : MonoBehaviour {
 	
 								  				
 		
-	//Set the grids in Awake so they can be used in Start						  				
-	void Awake () {
-		SetMovementGrid();
-	}
-	
 	void Start(){
-	
 	}
 	
 	void Update () {
 	
 	}
 	
-	void SetMovementGrid(){
-		switch(name)
+	public void SetMovementGrid(){
+		//Debug.Log (this.gameObject.name);
+	
+		switch(this.gameObject.name)
 		{
-			case "P1_Soldier":
+			case "P1_Soldier(Clone)":
 				unit_name = "S1";
 				move_grid = new int[7,7]   {{0,0,0,0,0,0,0},
 											{0,0,0,0,0,0,0},
@@ -45,8 +41,9 @@ public class unitControl : MonoBehaviour {
 											{0,0,3,2,3,0,0},
 											{0,0,0,0,0,0,0},
 											{0,0,0,0,0,0,0}};
+				//Debug.Log ("Soldier Set!");
 			break;
-			case "P1_Lance":
+			case "P1_Lance(Clone)":
 				unit_name = "L1";
 				move_grid = new int[7,7]   {{0,0,0,0,0,0,0},
 											{0,0,0,0,0,0,0},
@@ -56,7 +53,7 @@ public class unitControl : MonoBehaviour {
 											{0,0,0,2,0,0,0},
 											{0,0,0,3,0,0,0}};
 			break;
-			case "P1_Jester":
+			case "P1_Jester(Clone)":
 				unit_name = "J1";
 				move_grid = new int[7,7]   {{3,0,0,0,0,0,3},
 											{0,2,0,0,0,2,0},
@@ -66,7 +63,7 @@ public class unitControl : MonoBehaviour {
 											{0,2,0,0,0,2,0},
 											{3,0,0,0,0,0,3}};
 			break;
-			case "P1_Phalanx":
+			case "P1_Phalanx(Clone)":
 				unit_name = "P1";
 				move_grid = new int[7,7]   {{0,0,0,0,0,0,0},
 											{0,0,0,0,0,0,0},
@@ -76,7 +73,7 @@ public class unitControl : MonoBehaviour {
 											{0,0,0,0,0,0,0},
 											{0,0,0,0,0,0,0}};
 			break;
-			case "P1_Guard":
+			case "P1_Guard(Clone)":
 				unit_name = "G1";	
 				move_grid = new int[7,7]   {{0,0,0,0,0,0,0},
 											{0,3,0,3,0,3,0},
@@ -86,7 +83,7 @@ public class unitControl : MonoBehaviour {
 											{0,0,0,0,0,0,0},
 											{0,0,0,0,0,0,0}};
 			break;
-			case "P1_Tzarr":
+			case "P1_Tzarr(Clone)":
 				unit_name = "T1";
 				move_grid = new int[7,7]   {{0,0,0,0,0,0,0},
 											{0,0,0,0,0,0,0},
@@ -96,7 +93,7 @@ public class unitControl : MonoBehaviour {
 											{0,0,0,0,0,0,0},
 											{0,0,0,0,0,0,0}};
 			break;
-			case "P2_Soldier":
+			case "P2_Soldier(Clone)":
 				unit_name = "S2";
 				move_grid = new int[7,7]   {{0,0,0,0,0,0,0},
 											{0,0,0,0,0,0,0},
@@ -106,7 +103,7 @@ public class unitControl : MonoBehaviour {
 											{0,0,0,0,0,0,0},
 											{0,0,0,0,0,0,0}};
 			break;
-			case "P2_Lance":
+			case "P2_Lance(Clone)":
 				unit_name = "L2";
 				move_grid = new int[7,7]   {{0,0,0,3,0,0,0},
 											{0,0,0,2,0,0,0},
@@ -116,7 +113,7 @@ public class unitControl : MonoBehaviour {
 											{0,0,0,0,0,0,0},
 											{0,0,0,0,0,0,0}};
 			break;
-			case "P2_Jester":
+			case "P2_Jester(Clone)":
 				unit_name = "J2";
 				move_grid = new int[7,7]   {{3,0,0,0,0,0,3},
 											{0,2,0,0,0,2,0},
@@ -126,7 +123,7 @@ public class unitControl : MonoBehaviour {
 											{0,2,0,0,0,2,0},
 											{3,0,0,0,0,0,3}};
 			break;
-			case "P2_Phalanx":
+			case "P2_Phalanx(Clone)":
 				unit_name = "P2";
 				move_grid = new int[7,7]   {{0,0,0,0,0,0,0},
 											{0,0,0,0,0,0,0},
@@ -136,7 +133,7 @@ public class unitControl : MonoBehaviour {
 											{0,0,0,0,0,0,0},
 											{0,0,0,0,0,0,0}};
 			break;
-			case "P2_Guard":
+			case "P2_Guard(Clone)":
 				unit_name = "G2";
 				move_grid = new int[7,7]   {{0,0,0,0,0,0,0},
 											{0,0,0,0,0,0,0},
@@ -146,7 +143,7 @@ public class unitControl : MonoBehaviour {
 											{0,3,0,3,0,3,0},
 											{0,0,0,0,0,0,0}};
 			break;
-			case "P2_Tzarr":
+			case "P2_Tzarr(Clone)":
 				unit_name = "T2";
 				move_grid = new int[7,7]   {{0,0,0,0,0,0,0},
 											{0,0,0,0,0,0,0},
