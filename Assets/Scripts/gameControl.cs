@@ -32,6 +32,7 @@ public class gameControl : MonoBehaviour {
 	  //Set the board grid integers to locate where friendly and enemy players are
 	  BoardGridSet();
 	  
+	  ClearUnitGrid();
 	}
 
 	void Update () {
@@ -93,12 +94,13 @@ public class gameControl : MonoBehaviour {
 		
 		if (Physics.Raycast(temp_ray,out ray_hit,1000)){
 			if (ray_hit.transform.tag == "WhiteUnit" || ray_hit.transform.tag == "BlackUnit"){
-				clicked_unit = ray_hit.collider.gameObject;
+				clicked_unit = ray_hit.collider.gameObject; 
 				clicked_unit.GetComponent<unitControl>().selected = true;
 				grid_x = clicked_unit.GetComponent<unitControl>().x_loc;
 				grid_y = clicked_unit.GetComponent<unitControl>().y_loc;
 				
-				Debug.Log (clicked_unit.name);
+				//Debug.Log (clicked_unit.name);
+				//Debug.Log (clicked_unit.tag);
 				UpdateUnitGrid();
 			}	
 			else if (ray_hit.transform.tag == "BoardSquare"){
@@ -119,18 +121,27 @@ public class gameControl : MonoBehaviour {
 	}
 	
 	void UpdateUnitGrid(){
+		ClearUnitGrid();
+	
 		unitControl unit_scr = clicked_unit.GetComponent<unitControl>();
 		int x_shift = unit_scr.x_loc - 3;
 		int y_shift = unit_scr.y_loc - 3;
 		
-		ClearUnitGrid();
+		Debug.Log (unit_scr.gameObject.name);
+		//Debug.Log ("X Loc: " + unit_scr.x_loc + ", Y Loc: " + unit_scr.y_loc);
+		//DebugInt7Array(unit_scr.move_grid);
+
 		
-		for (int i = 0; i < 9; i ++){
-		for (int j = 0; j < 9; j ++){
+		for (int i = 0; i < 7; i ++){
+		for (int j = 0; j < 7; j ++){
 			
-			if ((i+x_shift >= 0) && (j+y_shift >= 0) && (i + x_shift < 9) && (j + y_shift < 9) && (j < 7) && (i < 7)){
+			if ((i+x_shift >= 0) && (j+y_shift >= 0) && (i + x_shift < 9) && (j + y_shift < 9)){
 				unit_grid[i+x_shift,j+y_shift] = unit_scr.move_grid[i,j];
-			} else unit_grid[i,j] = 0;
+				//Debug.Log ("Reading: X_Shift + I: " + (i+x_shift) + ", Y_Shift + J: "+ (j+y_shift));
+				//Debug.Log ("Reading: X_Shift: " + x_shift + ", Y_Shift: "+ y_shift);
+				//Debug.Log ("Reading: I: " + i + ", J: " + j);
+				//Debug.Log ("Unit Move Number: " + unit_scr.move_grid[i,j]);
+				}
 		}}
 		
 		//DebugIntArray(unit_grid);
@@ -180,8 +191,9 @@ public class gameControl : MonoBehaviour {
 	
 	//Checks if the Unit matches the player turn
 	bool UnitIsOurs(){
-		if (player_turn == 1 && clicked_unit.tag == "WhiteUnit") {return true;}
-		else if (player_turn == 2 && clicked_unit.tag == "BlackUnit") {return true;}
+	
+		Debug.Log (clicked_unit.tag);
+		if ((player_turn == 1 && clicked_unit.tag == "WhiteUnit") || (player_turn == 2 && clicked_unit.tag == "BlackUnit")) {return true;}
 		else {return false;}
 	}
 	
@@ -197,14 +209,21 @@ public class gameControl : MonoBehaviour {
 	void DebugIntArray(int[,] array){
 		for (int i = 0; i < 9; i ++){
 		for (int j = 0; j < 9; j ++){
-			Debug.Log (array[i,j]);
+			Debug.Log ("X: " + i + ", Y: " + j + ", Value: " + array[i,j]);
+		}}
+	}
+	
+	void DebugInt7Array(int[,] array){
+		for (int i = 0; i < 7; i ++){
+		for (int j = 0; j < 7; j ++){
+			Debug.Log ("X: " + i + ", Y: " + j + ", Value: " + array[i,j]);
 		}}
 	}
 	
 	void DebugGameObjArray(GameObject[,] array){
 		for (int i = 0; i < 9; i ++){
 		for (int j = 0; j < 9; j ++){
-			Debug.Log (array[i,j].name);	
+			Debug.Log ("X: " + i + ", Y: " + j + ", Value: " + array[i,j]);	
 		}}
 	}
 	

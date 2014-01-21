@@ -13,6 +13,8 @@ public class boardSquare : MonoBehaviour {
 	
 	public GameObject 		game_board;						//this is the main game board / drop in inspector to link scripts / set to the board when creating squares];
 	
+	public Material[]		board_mat = new Material[6];
+	
 	public GameObject		linked_unit = null;
 	
 	private boardControl 	board_script;					//this is the script for the game board, set in START
@@ -29,10 +31,11 @@ public class boardSquare : MonoBehaviour {
 	void Update () {
 		if (square_state == 0){
 			renderer.enabled = false;
+			
 		}
 		else{
 			renderer.enabled = true;
-			renderer.material = renderer.materials[square_state - 1];
+			renderer.material = board_mat[square_state - 1];
 		}
 	 }//end of Update
 	

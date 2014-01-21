@@ -118,10 +118,10 @@ public class boardControl : MonoBehaviour {
 				temp_obj.GetComponent<unitControl>().y_loc = j;
 				
 				temp_obj.GetComponent<unitControl>().SetMovementGrid();
+				
+				board_sqs[i,j].GetComponent<boardSquare>().linked_unit = temp_obj;
 			}
 			
-			//Stores the unit in the board sqs to keep track of what items are where
-			board_sqs[i,j].GetComponent<boardSquare>().linked_unit = temp_obj;
 			
 		}}//end of For Loops
 	
