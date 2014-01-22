@@ -13,6 +13,7 @@ public class unitControl : MonoBehaviour {
 							  				{0,0,0,0,0,0,0}};
 	public string unit_name		= "O";												//Unit Name is used in the board information
 	public bool selected 		= false;
+	public bool	can_jump		= false;
 	
 	//Location of the Unit
 	public int		x_loc		= -1;
@@ -54,7 +55,8 @@ public class unitControl : MonoBehaviour {
 											{0,0,0,3,0,0,0}};
 			break;
 			case "P1_Jester(Clone)":
-				unit_name = "J1";
+				unit_name 	= "J1";
+				can_jump	= true;
 				move_grid = new int[7,7]   {{3,0,0,0,0,0,3},
 											{0,2,0,0,0,2,0},
 											{0,0,0,2,0,0,0},
@@ -114,7 +116,8 @@ public class unitControl : MonoBehaviour {
 											{0,0,0,0,0,0,0}};
 			break;
 			case "P2_Jester(Clone)":
-				unit_name = "J2";
+				unit_name 	= "J2";
+				can_jump 	= true;
 				move_grid = new int[7,7]   {{3,0,0,0,0,0,3},
 											{0,2,0,0,0,2,0},
 											{0,0,0,2,0,0,0},

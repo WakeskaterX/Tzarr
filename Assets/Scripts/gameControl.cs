@@ -10,9 +10,9 @@ public class gameControl : MonoBehaviour {
 	public GameObject[,]	bsq_grid 		= new GameObject[9,9];		//locations of board squares for highlighting
 	
 	public int[,]			unit_grid		= new int[9,9];				//0 - empty, 1 - center, 2 - normal move, 3 - tzarr move 
-	public int[,]			board_grid		= new int[9,9];				//0 - open, 1 - P1 Unit, 2 - P2 Unit
 	
 	public GameObject  		clicked_unit;
+
 	
 	//Currently Selected Grid Location (-1 for nothing)
 	private int				grid_x			= -1;
@@ -28,10 +28,7 @@ public class gameControl : MonoBehaviour {
 	  
 	  //Link to the board squares game object arrays
 	  bsq_grid = board_script.board_sqs;
-	  
-	  //Set the board grid integers to locate where friendly and enemy players are
-	  BoardGridSet();
-	  
+
 	  ClearUnitGrid();
 	}
 
@@ -53,39 +50,11 @@ public class gameControl : MonoBehaviour {
 		if (Input.GetMouseButtonDown(0) && clicked_unit == null){
 			SelectUnit();
 		}
+		else
+		if (Input.GetMouseButtonDown(0) && clicked_unit != null){
+			MoveUnit();
+		}
 	}
-	
-	void BoardGridSet(){
-		//get info from the String Array telling which units are where and turn that into integer data for friendly and enemy locations
-		for (int i = 0; i < 9; i++){
-		for (int j = 0; j < 9; j++){
-			
-			switch(board_script.board_grid[i,j])
-			{
-				case "O":
-					board_grid[i,j] = 0;
-				break;
-				
-				case "S1":
-				case "L1":
-				case "J1":
-				case "P1":
-				case "G1":
-				case "T1":
-					board_grid[i,j] = 1;
-				break;
-				
-				case "S2":
-				case "L2":
-				case "J2":
-				case "P2":
-				case "G2":
-				case "T2":
-					board_grid[i,j] = 2;
-				break;
-			}
-		}}
-	}//end of BoardGridSet
 	
 	void SelectUnit(){
 		//send out a raycast and check for colliders with tag WhitePlayer or BlackPlayer
@@ -115,9 +84,63 @@ public class gameControl : MonoBehaviour {
 				}
 			}
 		}
-		//Debug.Log (clicked_unit.name);
+		//Debug.Log (clicked_unit.name);	
+	}//End of Select Unit
+	
+	void MoveUnit(){
+		RaycastHit ray_hit;
+		Ray temp_ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+		int layerMask = 1 << 9;
 		
+		if (Physics.Raycast(temp_ray,out ray_hit,1000,layerMask)){
+			if (ray_hit.transform.tag == "BoardSquare"){
+				if (ray_hit.transform.gameObject.GetComponent<boardSquare>().square_state == 1){
+					MoveToLocation(ray_hit.transform.gameObject.GetComponent<boardSquare>().x_loc,ray_hit.transform.gameObject.GetComponent<boardSquare>().y_loc);
+				} else if (ray_hit.transform.gameObject.GetComponent<boardSquare>().square_state == 2){
+					AttackLocation(ray_hit.transform.gameObject.GetComponent<boardSquare>().x_loc,ray_hit.transform.gameObject.GetComponent<boardSquare>().y_loc);
+				}
+			}
+		}
 		
+		//Clear Selection
+		if (clicked_unit != null){
+			clicked_unit.GetComponent<unitControl>().selected = false;
+		}
+		clicked_unit 	= null;
+		grid_x			= -1;
+		grid_y			= -1;
+		
+		ClearUnitGrid();
+	}//End of Move Unit
+	
+	void MoveToLocation(int xx, int yy){
+		clicked_unit.transform.position = bsq_grid[xx,yy].transform.position;
+		clicked_unit.GetComponent<unitControl>().x_loc = xx;
+		clicked_unit.GetComponent<unitControl>().y_loc = yy;
+		bsq_grid[xx,yy].GetComponent<boardSquare>().linked_unit = clicked_unit;
+		bsq_grid[grid_x,grid_y].GetComponent<boardSquare>().linked_unit = null;
+		
+		//changes the board grid so it can be saved later as a string array
+		board_script.board_grid[xx,yy] = clicked_unit.GetComponent<unitControl>().unit_name;
+		board_script.board_grid[grid_x,grid_y] = "O";
+		
+		PlayerTurnSwap();
+	}
+	
+	void AttackLocation(int xx, int yy){
+		
+		Destroy(bsq_grid[xx,yy].GetComponent<boardSquare>().linked_unit);
+		clicked_unit.transform.position = bsq_grid[xx,yy].transform.position;
+		clicked_unit.GetComponent<unitControl>().x_loc = xx;
+		clicked_unit.GetComponent<unitControl>().y_loc = yy;
+		bsq_grid[xx,yy].GetComponent<boardSquare>().linked_unit = clicked_unit;
+		bsq_grid[grid_x,grid_y].GetComponent<boardSquare>().linked_unit = null;
+		
+		//changes the board grid so it can be saved for later as a string array
+		board_script.board_grid[xx,yy] = clicked_unit.GetComponent<unitControl>().unit_name;
+		board_script.board_grid[grid_x,grid_y] = "O";
+		
+		PlayerTurnSwap();
 	}
 	
 	void UpdateUnitGrid(){
@@ -128,23 +151,15 @@ public class gameControl : MonoBehaviour {
 		int y_shift = unit_scr.y_loc - 3;
 		
 		Debug.Log (unit_scr.gameObject.name);
-		//Debug.Log ("X Loc: " + unit_scr.x_loc + ", Y Loc: " + unit_scr.y_loc);
-		//DebugInt7Array(unit_scr.move_grid);
 
-		
 		for (int i = 0; i < 7; i ++){
 		for (int j = 0; j < 7; j ++){
 			
 			if ((i+x_shift >= 0) && (j+y_shift >= 0) && (i + x_shift < 9) && (j + y_shift < 9)){
 				unit_grid[i+x_shift,j+y_shift] = unit_scr.move_grid[i,j];
-				//Debug.Log ("Reading: X_Shift + I: " + (i+x_shift) + ", Y_Shift + J: "+ (j+y_shift));
-				//Debug.Log ("Reading: X_Shift: " + x_shift + ", Y_Shift: "+ y_shift);
-				//Debug.Log ("Reading: I: " + i + ", J: " + j);
-				//Debug.Log ("Unit Move Number: " + unit_scr.move_grid[i,j]);
-				}
+			}
 		}}
 		
-		//DebugIntArray(unit_grid);
 		UpdateSquareTex();
 	}
 	
@@ -156,7 +171,6 @@ public class gameControl : MonoBehaviour {
 		}}
 		
 		UpdateSquareTex();
-		BoardGridSet();
 	}
 	
 	void UpdateSquareTex(){
@@ -167,20 +181,20 @@ public class gameControl : MonoBehaviour {
 					bsq_grid[i,j].GetComponent<boardSquare>().square_state = 0;
 					break;
 				case 1:
+					//SELECTION TILE
 					if (UnitIsOurs()) {bsq_grid[i,j].GetComponent<boardSquare>().square_state = 3;}
 					else {bsq_grid[i,j].GetComponent<boardSquare>().square_state = 6;}
 					break;
 				case 2:
-					//CHANGE THIS LATER JUST FOR TEST ATM
-					if (UnitIsOurs()) {bsq_grid[i,j].GetComponent<boardSquare>().square_state = 1;}
-					else {bsq_grid[i,j].GetComponent<boardSquare>().square_state = 4;}
+					//MOVEMENT TILE
+					MovementTile(i,j);
 					break;
 				case 3:
+					//TZARR TILE (Same As Movement When Tzarr is 1 away)
 					if (TzarrIsNear())
 					{
-						if (UnitIsOurs()){}
-						else {}
-					} else bsq_grid[i,j].GetComponent<boardSquare>().square_state = 0;
+						MovementTile(i,j);
+					} else {bsq_grid[i,j].GetComponent<boardSquare>().square_state = 0;}
 					break;
 				default:
 					bsq_grid[i,j].GetComponent<boardSquare>().square_state = 0;
@@ -189,6 +203,11 @@ public class gameControl : MonoBehaviour {
 		}}
 	}
 	
+	void PlayerTurnSwap(){
+		if (player_turn == 1) player_turn = 2;
+		else if (player_turn == 2) player_turn = 1;
+	}
+ 	
 	//Checks if the Unit matches the player turn
 	bool UnitIsOurs(){
 	
@@ -197,9 +216,59 @@ public class gameControl : MonoBehaviour {
 		else {return false;}
 	}
 	
+	bool UnitIsOurTeam(int kk, int ll)
+	{
+		string plTag = bsq_grid[kk,ll].GetComponent<boardSquare>().linked_unit.tag;
+		string turnTag;
+		
+		if (player_turn == 1) turnTag = "WhiteUnit";
+		else turnTag = "BlackUnit";
+		
+		if (plTag == turnTag) return true;
+		else return false;
+	}
+	
 	//Checks if the Tzarr is within 1 space of the unit
 	bool TzarrIsNear(){
+		for (int i = grid_x - 1; i <= grid_x + 1; i++){
+		for (int j = grid_y - 1; j <= grid_y + 1; j++){
+			if (i >= 0 && j >= 0 && i < 9 && j < 9)
+			{
+				if (bsq_grid[i,j].GetComponent<boardSquare>().linked_unit != null){
+				if ((player_turn == 1 && bsq_grid[i,j].GetComponent<boardSquare>().linked_unit.GetComponent<unitControl>().unit_name == "T1") || (player_turn == 2 && bsq_grid[i,j].GetComponent<boardSquare>().linked_unit.GetComponent<unitControl>().unit_name == "T2")){
+					return true;	
+				}}
+			}
+		
+		}}
+		
 		return false;	
+	}
+	
+	void MovementTile(int k, int l){
+	
+		if (bsq_grid[k,l].GetComponent<boardSquare>().linked_unit != null){
+			if (UnitIsOurs()) {
+				if (UnitIsOurTeam(k,l)){
+					bsq_grid[k,l].GetComponent<boardSquare>().square_state = 4;
+				} else {
+					bsq_grid[k,l].GetComponent<boardSquare>().square_state = 2;
+				}
+			}
+			else {
+				if (!UnitIsOurTeam(k,l)){
+					bsq_grid[k,l].GetComponent<boardSquare>().square_state = 4;
+				} else {
+					bsq_grid[k,l].GetComponent<boardSquare>().square_state = 5;
+				}
+		}} else {
+			if (UnitIsOurs()) {
+				bsq_grid[k,l].GetComponent<boardSquare>().square_state = 1;
+			}
+			else{
+				bsq_grid[k,l].GetComponent<boardSquare>().square_state = 4;
+			}
+		}
 	}
 	
 	
