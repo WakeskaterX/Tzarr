@@ -23,15 +23,23 @@ public class cameraControl : MonoBehaviour {
 	private float 	cam_y			= 0f;								//the camera Y location
 	private float 	cam_z			= 0f;								//the camera Z location
 	
+	public Texture tex_p1;
+	public Texture tex_p2;
+	
+	public gameControl game_cont;
+	
 	
 
 	void Start () {
 		cam_x = transform.position.x;
 		cam_y = transform.position.y;
 		cam_z = transform.position.z;
+		
+		game_cont = GameObject.Find ("GameControl").GetComponent<gameControl>();
 	}//endof Start
 	
 	void Update () {
+	
 	  if (Input.GetMouseButton (1))
 	  {
 	  	if (Input.GetAxis("Mouse X") > 0.02f || Input.GetAxis("Mouse X") < -0.02f)
@@ -49,11 +57,16 @@ public class cameraControl : MonoBehaviour {
 	  		ZoomCamera();
 	  }
 	  
-	  
 	  CamUpdatePosition();												//updates camera transform.position
 	  CamLookCenter();													//locks the camera to look at the center of the board
 	  //CamAngleLock();													//keeps the angle within 0 and 360
 	}//endof Update
+	
+	void OnGUI(){
+		if (game_cont.player_turn == 1){
+			GUI.DrawTexture (new Rect(0,-36,128,128),tex_p1);
+		} else {GUI.DrawTexture (new Rect(0,-36,128,128),tex_p2);}
+	}
 	
 	public void PanCamera(){
 		//Debug.Log("Moving Camera Right");

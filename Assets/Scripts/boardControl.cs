@@ -9,15 +9,15 @@ public class boardControl : MonoBehaviour {
 	 *  L  - Lance			*	T  - Tzarr/King
 	 *  J  - Jester			*   1/2  - Player 1/2  (White/Black)
 	 */
-	public string[,] board_grid = new string[9,9]  {{"L1",	"J1",	"P1",	"G1",	"T1",	"G1",	"P1",	"J1",	"L1"},
-													{"S1",	"S1",	"S1",	"S1",	"S1",	"S1",	"S1",	"S1",	"S1"},
+	public string[,] board_grid = new string[9,9]  {{"L1",	"J1",	"G1",	"P1",	"T1",	"P1",	"G1",	"J1",	"L1"},
+													{"S1",	"S1",	"O",	"O",	"O",	"O",	"O",	"S1",	"S1"},
+													{"O",	"O",	"S1",	"S1",	"S1",	"S1",	"S1",	"O",	"O"},
 													{"O",	"O",	"O",	"O",	"O",	"O",	"O",	"O",	"O"},
 													{"O",	"O",	"O",	"O",	"O",	"O",	"O",	"O",	"O"},
 													{"O",	"O",	"O",	"O",	"O",	"O",	"O",	"O",	"O"},
-													{"O",	"O",	"O",	"O",	"O",	"O",	"O",	"O",	"O"},
-													{"O",	"O",	"O",	"O",	"O",	"O",	"O",	"O",	"O"},
-													{"S2",	"S2",	"S2",	"S2",	"S2",	"S2",	"S2",	"S2",	"S2"},
-													{"L2",	"J2",	"P2",	"G2",	"T2",	"G2",	"P2",	"J2",	"L2"}};
+													{"O",	"O",	"S2",	"S2",	"S2",	"S2",	"S2",	"O",	"O"},
+													{"S2",	"S2",	"O",	"O",	"O",	"O",	"O",	"S2",	"S2"},
+													{"L2",	"J2",	"G2",	"P2",	"T2",	"P2",	"G2",	"J2",	"L2"}};
 													
 	public GameObject[,] board_sqs 	= new GameObject[9,9];
 	public GameObject bsq;
@@ -118,6 +118,8 @@ public class boardControl : MonoBehaviour {
 				temp_obj.GetComponent<unitControl>().y_loc = j;
 				
 				temp_obj.GetComponent<unitControl>().SetMovementGrid();
+				
+				temp_obj.GetComponent<unitControl>().socket = board_sqs[i,j];
 				
 				board_sqs[i,j].GetComponent<boardSquare>().linked_unit = temp_obj;
 			}

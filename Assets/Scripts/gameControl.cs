@@ -17,7 +17,9 @@ public class gameControl : MonoBehaviour {
 	//Currently Selected Grid Location (-1 for nothing)
 	private int				grid_x			= -1;
 	private int				grid_y			= -1; 
-
+	
+	public GameObject		main_cam;
+	
 	void Start () {
 	  //Set up game_board and board_script
 	  if (game_board == null)
@@ -25,6 +27,8 @@ public class gameControl : MonoBehaviour {
 	  	game_board = GameObject.Find ("Board");
 	  }
 	  board_script = game_board.GetComponent<boardControl>();
+	  
+	  main_cam = GameObject.Find("MainCamera");
 	  
 	  //Link to the board squares game object arrays
 	  bsq_grid = board_script.board_sqs;
@@ -114,6 +118,7 @@ public class gameControl : MonoBehaviour {
 	}//End of Move Unit
 	
 	void MoveToLocation(int xx, int yy){
+		clicked_unit.GetComponent<unitControl>().socket = bsq_grid[xx,yy];
 		clicked_unit.transform.position = bsq_grid[xx,yy].transform.position;
 		clicked_unit.GetComponent<unitControl>().x_loc = xx;
 		clicked_unit.GetComponent<unitControl>().y_loc = yy;
@@ -129,7 +134,8 @@ public class gameControl : MonoBehaviour {
 	
 	void AttackLocation(int xx, int yy){
 		
-		Destroy(bsq_grid[xx,yy].GetComponent<boardSquare>().linked_unit);
+		KillUnit(xx,yy);
+		clicked_unit.GetComponent<unitControl>().socket = bsq_grid[xx,yy];
 		clicked_unit.transform.position = bsq_grid[xx,yy].transform.position;
 		clicked_unit.GetComponent<unitControl>().x_loc = xx;
 		clicked_unit.GetComponent<unitControl>().y_loc = yy;
@@ -142,6 +148,16 @@ public class gameControl : MonoBehaviour {
 		
 		PlayerTurnSwap();
 	}
+	
+	void KillUnit(int x1, int y1){
+		
+		if (bsq_grid[x1,y1].GetComponent<boardSquare>().linked_unit.GetComponent<unitControl>().unit_name == "T1" || bsq_grid[x1,y1].GetComponent<boardSquare>().linked_unit.GetComponent<unitControl>().unit_name == "T2" )
+		{
+			EndGame(player_turn);
+		}
+		Destroy(bsq_grid[x1,y1].GetComponent<boardSquare>().linked_unit);
+	}
+	
 	
 	void UpdateUnitGrid(){
 		ClearUnitGrid();
@@ -204,8 +220,19 @@ public class gameControl : MonoBehaviour {
 	}
 	
 	void PlayerTurnSwap(){
-		if (player_turn == 1) player_turn = 2;
-		else if (player_turn == 2) player_turn = 1;
+		if (player_turn == 1) {
+			player_turn = 2;
+			main_cam.transform.position = new Vector3(0,23,-23);
+			main_cam.transform.rotation = Quaternion.Euler (new Vector3(55,0,0));
+			main_cam.GetComponent<cameraControl>().cam_angle = 3.13f;
+		}
+		else if (player_turn == 2) {
+			player_turn = 1;
+			main_cam.transform.position = new Vector3(0,23,23);
+			main_cam.transform.rotation = Quaternion.Euler (new Vector3(55,180,0));
+			main_cam.GetComponent<cameraControl>().cam_angle = 0f;
+		}
+		
 	}
  	
 	//Checks if the Unit matches the player turn
@@ -235,11 +262,15 @@ public class gameControl : MonoBehaviour {
 			if (i >= 0 && j >= 0 && i < 9 && j < 9)
 			{
 				if (bsq_grid[i,j].GetComponent<boardSquare>().linked_unit != null){
-				if ((player_turn == 1 && bsq_grid[i,j].GetComponent<boardSquare>().linked_unit.GetComponent<unitControl>().unit_name == "T1") || (player_turn == 2 && bsq_grid[i,j].GetComponent<boardSquare>().linked_unit.GetComponent<unitControl>().unit_name == "T2")){
-					return true;	
+				if (UnitIsOurs()){
+					if ((player_turn == 1 && bsq_grid[i,j].GetComponent<boardSquare>().linked_unit.GetComponent<unitControl>().unit_name == "T1") || (player_turn == 2 && bsq_grid[i,j].GetComponent<boardSquare>().linked_unit.GetComponent<unitControl>().unit_name == "T2")){
+						return true;	
+				}} else{
+					if ((player_turn == 1 && bsq_grid[i,j].GetComponent<boardSquare>().linked_unit.GetComponent<unitControl>().unit_name == "T2") || (player_turn == 2 && bsq_grid[i,j].GetComponent<boardSquare>().linked_unit.GetComponent<unitControl>().unit_name == "T1")){
+						return true;
+					}
 				}}
 			}
-		
 		}}
 		
 		return false;	
@@ -271,7 +302,14 @@ public class gameControl : MonoBehaviour {
 		}
 	}
 	
-	
+	void EndGame(int pTurn){
+		//Go to win room 
+		if (pTurn == 1){
+			Application.LoadLevel ("P1Win");
+		} else if (pTurn == 2){
+			Application.LoadLevel ("P2Win");
+		}
+	}
 	
 	
 	//DEBUG Methods

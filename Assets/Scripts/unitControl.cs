@@ -14,6 +14,7 @@ public class unitControl : MonoBehaviour {
 	public string unit_name		= "O";												//Unit Name is used in the board information
 	public bool selected 		= false;
 	public bool	can_jump		= false;
+	public GameObject socket;
 	
 	//Location of the Unit
 	public int		x_loc		= -1;
@@ -25,6 +26,12 @@ public class unitControl : MonoBehaviour {
 	}
 	
 	void Update () {
+	if (socket != null){
+		if (selected){
+			gameObject.transform.position = new Vector3(socket.transform.position.x,socket.transform.position.y+2,socket.transform.position.z);
+		}
+		else {gameObject.transform.position = socket.transform.position;}
+	}
 	
 	}
 	
